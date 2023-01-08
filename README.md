@@ -5,7 +5,7 @@ PubkeySollet is a wallet that allows you to specify the public key of the wallet
 
 - wallet for use on the Solana network
 - wallet for developers and those who support dApps
-- public key only! no secret key!
+- public key only! no private key!
 - connect as Sollet extension
 - signing transactions is always rejected
 - transactions are dumped to the console
