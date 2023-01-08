@@ -5,7 +5,8 @@
   "description": "Wallet with injected PublicKey, based on Sollet extension",
   "main": "index.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "pack": "zip -r dist/pubkey-sollet-extension.zip extension/"
   },
   "keywords": ["solana", "wallet", "sollet", "pubkey", "readonly", "test"],
   "license": "ISC",
