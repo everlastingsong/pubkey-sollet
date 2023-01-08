@@ -63,8 +63,9 @@ If you pin the extension, you will see the ``PS`` icon in your toolbar.
 ## 1. Connect as Sollet
 Connect to PubkeySollet by choosing ``Sollet (extension)``.
 
-PubkeySollet behaves as Sollet, so you can connect to ｄApps that support Sollet.
-Sollet also has ``Sollet (web)``, but this is not covered.
+PubkeySollet behaves as Sollet, so you can connect to dApps that support Sollet.
+
+<sub>💡 Sollet also has ``Sollet (web)``, but this is not covered.</sub>
 
 ### Orca
 Orca has two ``Sollet``, choose the **second** one.
@@ -86,3 +87,13 @@ Confirm that it is connected as a wallet with the entered public key.
 
 <img width="705" alt="github_use06" src="https://user-images.githubusercontent.com/98769788/211184948-fb4f8a22-1d0e-47a3-8123-932eaa9045fb.png">
 
+## 3. Dumping transactions
+Signing is obviously **IMPOSSIBLE** because PubkeySollet **DO NOT** have the private key! 🙂
+
+If PubkeySollet is requested to sign transactions, the contents of the transactions are automatically dumped to Console and a dialog box is displayed.
+
+<sub>💡 Console can be opened by clicking on the Chrome menu, hovering over ``More Tools`` then selecting ``Developer tools``.</sub>
+
+Closing the dialog box returns a response rejecting the request.
+
+<img width="705" alt="github_use08" src="https://user-images.githubusercontent.com/98769788/211185475-b9ef606d-6fdb-40a1-92ec-eb0a5d9bff27.png">
