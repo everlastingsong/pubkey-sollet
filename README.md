@@ -24,7 +24,7 @@ Transactions for which signatures are requested are dumped to the console and al
 
 # How to install
 ## Chrome Web Store
-Under review by Google...
+https://chrome.google.com/webstore/detail/pubkeysollet/pjligelplfpbmdlachdpefnfdokedfea
 
 ## Manual installation
 ### 1. Download the extension
