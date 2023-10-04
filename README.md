@@ -97,3 +97,13 @@ If PubkeySollet is requested to sign transactions, the contents of the transacti
 Closing the dialog box returns a response rejecting the request.
 
 <img width="705" alt="github_use08" src="https://user-images.githubusercontent.com/98769788/211185475-b9ef606d-6fdb-40a1-92ec-eb0a5d9bff27.png">
+
+# Alternatives
+## 🔎 Sherlock Wallet
+Sherlock Wallet provides many great features, let's visit it!
+
+- Use any Solana wallet on any wallet-standard compatible dApp to start inspecting
+- Add to address book
+- Transaction dump, inspection and simulation. Linking to the explorer
+
+https://github.com/TeamRaccoons/sherlock-wallet
