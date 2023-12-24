@@ -33,7 +33,7 @@ export async function handleSignMessage(message: Uint8Array): Promise<{ signatur
 }
 
 export async function handleSignTransaction<T extends Transaction | VersionedTransaction>(transaction: T): Promise<T> {
-  console.log("transaction\n" + /* TODO: dumpTransaction(transaction) */ "DUMP");
+  console.log("transaction\n" + dumpTransaction(transaction));
 
   window.alert([
     "signTransaction requested!",
@@ -46,7 +46,7 @@ export async function handleSignTransaction<T extends Transaction | VersionedTra
 }
 
 export async function handleSignAllTransactions<T extends Transaction | VersionedTransaction>(transactions: T[]): Promise<T[]> {
-  transactions.forEach((t, i) => console.log(`transactions[${i}]\n` + /* TODO: dumpTransaction(t, i) */ "DUMP "));
+  transactions.forEach((t, i) => console.log(`transactions[${i}]\n` + dumpTransaction(t, i)));
 
   const numTransactions = transactions.length;
   window.alert([
@@ -64,7 +64,7 @@ export async function handleSignAndSendTransaction<T extends Transaction | Versi
   transaction: T,
   options?: SendOptions
 ): Promise<{ signature: TransactionSignature }> {
-  console.log("transaction\n" + /* TODO: dumpTransaction(transaction) */ "DUMP");
+  console.log("transaction\n" + dumpTransaction(transaction));
 
   window.alert([
     "signTransactionAndSendTransaction requested!",
