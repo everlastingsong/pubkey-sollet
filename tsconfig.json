@@ -1,9 +1,15 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "target": "ES5",
-    "module": "ES2015",
+    "target": "ESNext",
+    "module": "ESNext",
     "strict": false,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noEmitOnError": true,
+    "resolveJsonModule": true,
+    "stripInternal": true,
+    "noUncheckedIndexedAccess": true
   }
 }

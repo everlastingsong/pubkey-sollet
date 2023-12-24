@@ -1,14 +1,6 @@
-import { Transaction, Message } from "@solana/web3.js";
-import * as bs58 from "bs58";
+import { Transaction } from "@solana/web3.js";
 
 const IX_DATA_CHUNK_SIZE = 32
-
-export function decodeTransaction(message: string): Transaction {
-  const bytes = bs58.decode(message); // message passed is encoded in base58
-  const decodedMessage = Message.from(bytes);
-  const decodedTransaction = Transaction.populate(decodedMessage);
-  return decodedTransaction;
-}
 
 function convertToHex(bytes: Uint8Array): string {
   return Array.from(bytes, (byte) => {
