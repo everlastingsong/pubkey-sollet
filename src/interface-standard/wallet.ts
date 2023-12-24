@@ -37,7 +37,7 @@ import { icon } from './icon';
 import type { SolanaChain } from './solana';
 import { isSolanaChain, isVersionedTransaction, SOLANA_CHAINS } from './solana';
 import { bytesEqual } from './util';
-import type { PubkeySolletStandard } from '../core/wallet';
+import type { PubkeySolletStandard } from '../pubkeysollet/wallet';
 
 export const PubkeySolletStandardNamespace = 'pubkeySolletStandard:';
 

@@ -1,4 +1,4 @@
-import { PubkeySolletStandard } from "../core/wallet";
+import { PubkeySolletStandard } from "../pubkeysollet/wallet";
 import { WalletRequest, WalletResponse } from "./types";
 import { decodeTransaction } from "./util";
 

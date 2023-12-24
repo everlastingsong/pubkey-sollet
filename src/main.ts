@@ -1,4 +1,4 @@
-import { PubkeySolletStandardImpl } from "./core/impl/wallet-impl";
+import { PubkeySolletStandardImpl } from "./pubkeysollet/impl/wallet-impl";
 import { initializeLegacyInterface } from "./interface-legacy";
 import { initializeStandardInterface } from "./interface-standard";
 
