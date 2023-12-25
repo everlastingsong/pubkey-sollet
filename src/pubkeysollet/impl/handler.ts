@@ -10,19 +10,37 @@ const REJECT_SIGN_REQUEST_ERROR = "REJECT SIGN REQUEST";
 
 export async function handleConnect(config: PubkeySolletSanitizedConfig): Promise<{ publicKey: PublicKey }> {
   const freqUsedPubkeys = config.frequentlyUsedPubkeys;
+  const options = freqUsedPubkeys.map(({ nickname, pubkey }, i) => {
+    return nickname.length === 0
+    ? `${i}: ${pubkey.slice(0, 10)}...${pubkey.slice(-10)}`
+    : `${i}: ${nickname} (${pubkey.slice(0, 10)}...${pubkey.slice(-10)})`
+  });
 
   const rawInputPubkey = window.prompt([
     WALLET_NAME + " connecting...",
     "",
     "Input wallet \"PublicKey\" in base58",
-    ...freqUsedPubkeys.map(({ nickname, pubkey }, i) => `${i+1}: ${nickname} (${pubkey.slice(0, 10)}...${pubkey.slice(-4)})`),
+    ...options,
   ].join("\n"));
   const inputPubkey = (rawInputPubkey ?? "").trim();
+  console.debug("inputPubkey", inputPubkey);
 
-  console.log("pubkey", inputPubkey);
+  // number input
+  let resolvedInputPubkey = inputPubkey;
+  if (!!inputPubkey.match(/^[0-9]+$/) && Number(inputPubkey) < freqUsedPubkeys.length) {
+    const index = Number(inputPubkey);
+    resolvedInputPubkey = freqUsedPubkeys[index].pubkey;
+  }
+  // nickname input
+  else if (freqUsedPubkeys.some(({ nickname }) => nickname === inputPubkey)) {
+    const index = freqUsedPubkeys.findIndex(({ nickname }) => nickname === inputPubkey);
+    resolvedInputPubkey = freqUsedPubkeys[index].pubkey;
+  }
+
+  console.log("pubkey", resolvedInputPubkey);
 
   try {
-    const pubkey = new PublicKey(inputPubkey);
+    const pubkey = new PublicKey(resolvedInputPubkey);
     return {
       publicKey: pubkey,
     }  
