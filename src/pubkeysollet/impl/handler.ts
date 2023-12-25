@@ -4,19 +4,26 @@ import { dumpTransaction } from "./txutil";
 
 const WALLET_NAME = "PubkeySollet";
 
+const INVALID_PUBLIC_KEY_ERROR = "INVALID PUBLIC KEY";
 const REJECT_SIGN_REQUEST_ERROR = "REJECT SIGN REQUEST";
 
 export async function handleConnect(): Promise<{ publicKey: PublicKey }> {
-  const pubkeyInput = window.prompt([
+  const rawInputPubkey = window.prompt([
     WALLET_NAME + " connecting...",
     "",
     "Input wallet \"PublicKey\" in base58"
   ].join("\n"));
-  const pubkey = (pubkeyInput ?? "").trim();
+  const inputPubkey = (rawInputPubkey ?? "").trim();
 
-  console.log("pubkey", pubkey);
-  return {
-    publicKey: new PublicKey(pubkey),
+  console.log("pubkey", inputPubkey);
+
+  try {
+    const pubkey = new PublicKey(inputPubkey);
+    return {
+      publicKey: pubkey,
+    }  
+  } catch {
+    throw new Error(INVALID_PUBLIC_KEY_ERROR);
   }
 }
 
