@@ -23,7 +23,7 @@ export function dumpTransaction(transaction: Transaction | VersionedTransaction,
 function dumpLegacyTransaction(transaction: Transaction, index: number|null = null): string {
   let lines: string[] = [];
 
-  lines.push(`version: not versioned transaction (legacy)`);
+  lines.push(`version: not versioned (legacy)`);
 
   transaction.instructions.forEach((ix, i) => {
     const prefix = index === null ? "" : `${index}.`;
