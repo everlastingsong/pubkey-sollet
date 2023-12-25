@@ -25,9 +25,19 @@ export async function handleDisconnect() {
 }
 
 export async function handleSignMessage(message: Uint8Array): Promise<{ signature: Uint8Array }> {
-  window.alert("signMessage requested! (will be cancelled)");
+  try {
+    const decoded = new TextDecoder(undefined, {fatal: true}).decode(message);
+    console.log("message\n" + decoded);
+  } catch {
+    console.log("failed to decode message as utf-8 string");
+  }
 
-  // TODO: dump message
+  window.alert([
+    "signMessage requested!",
+    "",
+    "- message will be rejected",
+    "- message was dumped to console"
+  ].join("\n"));
 
   throw new Error(REJECT_SIGN_REQUEST_ERROR);
 }
@@ -38,7 +48,7 @@ export async function handleSignTransaction<T extends Transaction | VersionedTra
   window.alert([
     "signTransaction requested!",
     "",
-    "- transaction will be cancelled",
+    "- transaction will be rejected",
     "- transaction was dumped to console"
   ].join("\n"));
 
@@ -53,7 +63,7 @@ export async function handleSignAllTransactions<T extends Transaction | Versione
     "signAllTransactions requested!",
     "",
     `- ${numTransactions} transaction(s)`,
-    "- transactions will be cancelled",
+    "- transactions will be rejected",
     "- transactions were dumped to console"
   ].join("\n"));
 
@@ -69,7 +79,7 @@ export async function handleSignAndSendTransaction<T extends Transaction | Versi
   window.alert([
     "signTransactionAndSendTransaction requested!",
     "",
-    "- transaction will be cancelled",
+    "- transaction will be rejected",
     "- transaction was dumped to console"
   ].join("\n"));
 
@@ -77,9 +87,14 @@ export async function handleSignAndSendTransaction<T extends Transaction | Versi
 }
 
 export async function handleSignIn(input?: SolanaSignInInput): Promise<SolanaSignInOutput> {
-  console.log("signRequest", JSON.stringify(input));
+  console.log("input\n" + JSON.stringify(input, null, 2));
 
-  window.alert("signIn requested! (will be cancelled)");
+  window.alert([
+    "signIn requested!",
+    "",
+    "- sign-in request will be rejected",
+    "- sign-in request was dumped to console"
+  ].join("\n"));
 
   throw new Error(REJECT_SIGN_REQUEST_ERROR);
 }
