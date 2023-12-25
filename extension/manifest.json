@@ -11,6 +11,17 @@
     "128": "icon/size128.png",
     "512": "icon/size512.png"
   },
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon/size16.png",
+      "32": "icon/size32.png",
+      "48": "icon/size48.png",
+      "128": "icon/size128.png",
+      "512": "icon/size512.png"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
@@ -19,7 +30,8 @@
         "https://*/*"
       ],
       "js": [
-        "js/contentscript.js"
+        "js/contentscript.js",
+        "js/popup.js"
       ],
       "run_at": "document_start",
       "all_frames": true

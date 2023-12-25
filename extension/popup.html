@@ -1,0 +1,76 @@
+<html>
+<head>
+  <title>PubkeySollet configuration</title>
+  <style type="text/css">
+    body {
+      min-width: 500px;
+      margin: 10px;
+    }
+
+    #save {
+      border: 1px solid #004C99;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #004C99;
+      color: white;
+      width: 100%;
+      cursor: pointer;
+    }
+    #save:hover {
+      background-color: #0055CC;
+    }
+    #save:active {
+    	-webkit-transform: translate(0,2px);
+	    -moz-transform: translate(0,2px);
+	    transform: translate(0,2px);
+    }
+    #save:disabled {
+      cursor: default;
+    }
+  </style>
+  <script type="text/javascript" src="js/popup.js"></script>
+</head>
+<body>
+<p>PubkeySollet configuration</p>
+<hr>
+
+<h3>frequently used pubkeys</h3>
+<p>The following pubkeys can be selected when you connect the wallet.</p>
+
+<!-- wow, now 90's ? table is used to implement layout, lol -->
+<div style="display: flex; align-items: center; justify-content: center;">
+<table style="border: 0px solid white;">
+  <tr>
+      <th>nickname</th>
+      <th>pubkey</th>
+  </tr>
+
+  <tr>
+    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+  </tr>
+  <tr>
+    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+  </tr>
+  <tr>
+    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+  </tr>
+  <tr>
+    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+  </tr>
+  <tr>
+    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+  </tr>
+
+  <tr><td colspan="2" style="padding-top: 10px">
+    <button id="save">Save</button>
+  </td></tr>
+</table>
+</div>
+
+</body>
+</html>

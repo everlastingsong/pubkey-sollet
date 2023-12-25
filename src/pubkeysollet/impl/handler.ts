@@ -1,17 +1,21 @@
 import { PublicKey, Transaction, VersionedTransaction, TransactionSignature, SendOptions } from "@solana/web3.js";
 import { type SolanaSignInInput, type SolanaSignInOutput } from '@solana/wallet-standard-features';
 import { dumpTransaction } from "./txutil";
+import { PubkeySolletSanitizedConfig } from "./wallet-impl";
 
 const WALLET_NAME = "PubkeySollet";
 
 const INVALID_PUBLIC_KEY_ERROR = "INVALID PUBLIC KEY";
 const REJECT_SIGN_REQUEST_ERROR = "REJECT SIGN REQUEST";
 
-export async function handleConnect(): Promise<{ publicKey: PublicKey }> {
+export async function handleConnect(config: PubkeySolletSanitizedConfig): Promise<{ publicKey: PublicKey }> {
+  const freqUsedPubkeys = config.frequentlyUsedPubkeys;
+
   const rawInputPubkey = window.prompt([
     WALLET_NAME + " connecting...",
     "",
-    "Input wallet \"PublicKey\" in base58"
+    "Input wallet \"PublicKey\" in base58",
+    ...freqUsedPubkeys.map(({ nickname, pubkey }, i) => `${i+1}: ${nickname} (${pubkey.slice(0, 10)}...${pubkey.slice(-4)})`),
   ].join("\n"));
   const inputPubkey = (rawInputPubkey ?? "").trim();
 

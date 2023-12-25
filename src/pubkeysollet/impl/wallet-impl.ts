@@ -1,5 +1,5 @@
 import { type SolanaSignInInput, type SolanaSignInOutput } from '@solana/wallet-standard-features';
-import type { PublicKey, SendOptions, Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
+import { PublicKey, SendOptions, Transaction, TransactionSignature, VersionedTransaction } from '@solana/web3.js';
 import { PubkeySolletStandard, PubkeySolletStandardEvent } from '../wallet';
 import {
     handleConnect,
@@ -11,7 +11,39 @@ import {
     handleSignIn,
 } from './handler';
 
+export type FrequentlyUsedPubkey = {
+    nickname: string;
+    pubkey: string;
+};
+
+export type PubkeySolletConfig = {
+    frequentlyUsedPubkeys?: FrequentlyUsedPubkey[];
+}
+
+export type PubkeySolletSanitizedConfig = {
+    frequentlyUsedPubkeys: FrequentlyUsedPubkey[];
+}
+
 export class PubkeySolletStandardImpl implements PubkeySolletStandard {
+    private sanitizedConfig: PubkeySolletSanitizedConfig;
+
+    constructor(config: PubkeySolletConfig) {
+        const isValidPubkey = (pubkey: string) => {
+            try {
+                new PublicKey(pubkey);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        this.sanitizedConfig = {
+            frequentlyUsedPubkeys: (config.frequentlyUsedPubkeys ?? [])
+                .map(({ nickname, pubkey }) => ({ nickname: nickname.trim(), pubkey: pubkey.trim() }))
+                .filter(({ nickname, pubkey }) => isValidPubkey(pubkey)),
+        };
+    }
+
     // implement for PubkeySolletStandardEventEmitter
     private listeners: Map<keyof PubkeySolletStandardEvent, Set<PubkeySolletStandardEvent[keyof PubkeySolletStandardEvent]>> = new Map();
     on<E extends keyof PubkeySolletStandardEvent>(event: E, listener: PubkeySolletStandardEvent[E], context?: any) {
@@ -40,7 +72,7 @@ export class PubkeySolletStandardImpl implements PubkeySolletStandard {
 
     async connect(options?: { onlyIfTrusted?: boolean }): Promise<{ publicKey: PublicKey }> {
         console.log("connect called");
-        const response = await handleConnect();
+        const response = await handleConnect(this.sanitizedConfig);
         this.publicKey = response.publicKey;
         this.emit('connect');
         return { publicKey: this.publicKey };

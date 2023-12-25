@@ -2,6 +2,14 @@ import { Transaction, VersionedTransaction } from "@solana/web3.js";
 
 const IX_DATA_CHUNK_SIZE = 32
 
+export function dumpTransaction(transaction: Transaction | VersionedTransaction, index: number|null = null): string {
+  if (isVersionedTransaction(transaction)) {
+    return dumpVersionedTransaction(transaction, index);
+  } else {
+    return dumpLegacyTransaction(transaction, index);
+  }
+}
+
 function convertToHex(bytes: Uint8Array): string {
   return Array.from(bytes, (byte) => {
     return (byte & 0xFF).toString(16).padStart(2, "0");
@@ -11,14 +19,6 @@ function convertToHex(bytes: Uint8Array): string {
 function isVersionedTransaction(transaction: Transaction | VersionedTransaction): transaction is VersionedTransaction {
   return "version" in transaction;
 };
-
-export function dumpTransaction(transaction: Transaction | VersionedTransaction, index: number|null = null): string {
-  if (isVersionedTransaction(transaction)) {
-    return dumpVersionedTransaction(transaction, index);
-  } else {
-    return dumpLegacyTransaction(transaction, index);
-  }
-}
 
 function dumpLegacyTransaction(transaction: Transaction, index: number|null = null): string {
   let lines: string[] = [];

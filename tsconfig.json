@@ -10,6 +10,7 @@
     "noEmitOnError": true,
     "resolveJsonModule": true,
     "stripInternal": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "types": ["chrome"]
   }
 }
