@@ -16,6 +16,10 @@ function convertToHex(bytes: Uint8Array): string {
   }).join('');
 }
 
+function convertToBase64(bytes: Uint8Array): string {
+  return Buffer.from(bytes).toString("base64");
+}
+
 function isVersionedTransaction(transaction: Transaction | VersionedTransaction): transaction is VersionedTransaction {
   return "version" in transaction;
 };
@@ -31,7 +35,7 @@ function dumpLegacyTransaction(transaction: Transaction, index: number|null = nu
 
     lines.push(`  data`);
     for (let d=0; d<ix.data.length; d+=IX_DATA_CHUNK_SIZE) {
-      const hex = convertToHex(ix.data.slice(d, d+IX_DATA_CHUNK_SIZE));
+      const hex = convertToHex(new Uint8Array(ix.data).slice(d, d+IX_DATA_CHUNK_SIZE));
       lines.push(`    ${hex}`);
     }
 
@@ -45,6 +49,11 @@ function dumpLegacyTransaction(transaction: Transaction, index: number|null = nu
 
     lines.push("");
   });
+
+  const serializedBase64 = convertToBase64(new Uint8Array(transaction.serialize({ requireAllSignatures: false, verifySignatures: false })));
+  lines.push(`serialized: ${serializedBase64}`);
+  lines.push("");
+
   return lines.join("\n");
 }
 
@@ -89,6 +98,10 @@ function dumpVersionedTransaction(transaction: VersionedTransaction, index: numb
 
     lines.push("");
   });
+
+  const serializedBase64 = convertToBase64(transaction.serialize());
+  lines.push(`serialized: ${serializedBase64}`);
+  lines.push("");
 
   return lines.join("\n");
 }
