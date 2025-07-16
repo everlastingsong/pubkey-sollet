@@ -37,7 +37,39 @@ function restore() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  restore();
+function buildPopup() {
+  const configBtn = document.getElementById('config-btn');
+  const txBtn = document.getElementById('tx-btn');
+  const configSection = document.getElementById('config-section');
+  const txSection = document.getElementById('tx-section');
+
+  function selectTab(tab) {
+    if (tab === 'config') {
+      configBtn.classList.add('selected');
+      txBtn.classList.remove('selected');
+      configSection.classList.remove('hidden');
+      txSection.classList.add('hidden');
+    } else {
+      configBtn.classList.remove('selected');
+      txBtn.classList.add('selected');
+      configSection.classList.add('hidden');
+      txSection.classList.remove('hidden');
+    }
+  }
+
+  configBtn.addEventListener('click', function() { selectTab('config'); });
+  txBtn.addEventListener('click', function() { selectTab('tx'); });
+
+  selectTab('config');
+
   document.getElementById('save').addEventListener('click', save);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (!document.getElementById('pubkeysollet-popup-body')) {
+    return;
+  }
+
+  buildPopup();
+  restore();  
 });

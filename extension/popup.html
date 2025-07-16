@@ -1,12 +1,40 @@
 <html>
 <head>
-  <title>PubkeySollet configuration</title>
+  <title>PubkeySollet</title>
   <style type="text/css">
     body {
-      min-width: 500px;
+      min-width: 600px;
       margin: 10px;
     }
-
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .title {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    .toggle-group {
+      display: flex;
+      gap: 10px;
+    }
+    .toggle-btn {
+      border: 0px solid #004C99;
+      background: lightgray;
+      color: dimgray;
+      padding: 8px 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: bold;
+      transition: background 0.2s, color 0.2s;
+    }
+    .toggle-btn.selected, .toggle-btn:checked {
+      background: limegreen;
+      color: #fff;
+    }
     #save {
       border: 1px solid #004C99;
       padding: 10px;
@@ -21,56 +49,103 @@
     }
     #save:active {
     	-webkit-transform: translate(0,2px);
-	    -moz-transform: translate(0,2px);
-	    transform: translate(0,2px);
+    	-moz-transform: translate(0,2px);
+    	transform: translate(0,2px);
     }
     #save:disabled {
       cursor: default;
     }
+    .content-section {
+      margin-top: 10px;
+      height: 400px;
+      background: #fafbfc;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .hidden {
+      display: none;
+    }
+    .transactions-frame {
+      text-align: center;
+      color: #888;      
+    }
   </style>
   <script type="text/javascript" src="js/popup.js"></script>
 </head>
-<body>
-<p>PubkeySollet configuration</p>
-<hr>
-
-<h3>frequently used pubkeys</h3>
-<p>The following pubkeys can be selected when you connect the wallet.</p>
-
-<!-- wow, now 90's ? table is used to implement layout, lol -->
-<div style="display: flex; align-items: center; justify-content: center;">
-<table style="border: 0px solid white;">
-  <tr style="font-size: smaller;">
-      <th>nickname</th>
-      <th>pubkey</th>
-  </tr>
-
-  <tr>
-    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
-    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
-  </tr>
-  <tr>
-    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
-    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
-  </tr>
-  <tr>
-    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
-    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
-  </tr>
-  <tr>
-    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
-    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
-  </tr>
-  <tr>
-    <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
-    <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
-  </tr>
-
-  <tr><td colspan="2" style="padding-top: 10px">
-    <button id="save">Save</button>
-  </td></tr>
-</table>
+<body id="pubkeysollet-popup-body">
+<div class="header">
+  <div class="title">PubkeySollet</div>
+  <div class="toggle-group">
+    <button id="tx-btn" class="toggle-btn" type="button">Last Transactions</button>
+    <button id="config-btn" class="toggle-btn" type="button">Config</button>
+  </div>
 </div>
 
+<hr>
+
+<div class="content-section">
+  <div id="config-section">
+    <h3>Frequently used pubkeys</h3>
+    <p>The following pubkeys can be selected when you connect the wallet.</p>
+    <div style="display: flex; align-items: center; justify-content: center;">
+    <table style="border: 0px solid white;">
+      <tr style="font-size: smaller;">
+          <th>nickname</th>
+          <th>pubkey</th>
+      </tr>
+      <tr>
+        <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+        <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+      </tr>
+      <tr>
+        <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+        <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+      </tr>
+      <tr>
+        <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+        <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+      </tr>
+      <tr>
+        <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+        <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+      </tr>
+      <tr>
+        <td><input name="nickname" type="text" size="16" maxlength="16" value=""></td>
+        <td><input name="pubkey" type="text" size="60" maxlength="50" value=""></td>
+      </tr>
+      <tr><td colspan="2" style="padding-top: 10px">
+        <button id="save">Save</button>
+      </td></tr>
+    </table>
+    </div>
+  </div>
+  <div id="tx-section" class="hidden">
+    <div class="transactions-frame">
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+      long <br>
+    </div>
+  </div>
+</div>
 </body>
 </html>

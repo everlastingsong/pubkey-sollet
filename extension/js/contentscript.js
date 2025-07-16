@@ -10,3 +10,8 @@ chrome.storage.local.get("config", ({config}) => {
   container.insertBefore(scriptTag, container.children[0]);
   container.removeChild(scriptTag);
 });
+
+window.addEventListener("callMyFunction", (event) => {
+  const detail = event.detail;
+  console.info("callMyFunction event received", detail);
+});

@@ -103,5 +103,11 @@ function dumpVersionedTransaction(transaction: VersionedTransaction, index: numb
   lines.push(`serialized: ${serializedBase64}`);
   lines.push("");
 
+  window.dispatchEvent(new CustomEvent("callMyFunction", {
+    detail: {
+      serializedBase64,
+    },
+  }));
+
   return lines.join("\n");
 }
