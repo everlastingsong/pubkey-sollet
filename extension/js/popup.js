@@ -67,6 +67,11 @@ function restoreLastTransactions() {
       instructionsTable.className = "instructions-table";
       instructionsTable.innerHTML = instructionsTableInnerHTML;
 
+      const serializedDiv = document.createElement('div');
+      transactionDiv.appendChild(serializedDiv);
+      serializedDiv.setAttribute("style", "font-size: small;")
+      serializedDiv.innerHTML = `<pre style="white-space: pre-wrap; word-break: break-all;">${btoa(String.fromCharCode(...tx.serialized))}</pre>`;
+
       lastTransactionsFrame.appendChild(transactionDiv);
     });
 
