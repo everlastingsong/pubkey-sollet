@@ -1,6 +1,6 @@
 import { PublicKey, Transaction, VersionedTransaction, TransactionSignature, SendOptions } from "@solana/web3.js";
 import { type SolanaSignInInput, type SolanaSignInOutput } from '@solana/wallet-standard-features';
-import { dumpTransaction } from "./txutil";
+import { parseTransaction, stringifyParsedTransaction } from "./txutil";
 import { PubkeySolletSanitizedConfig } from "./wallet-impl";
 
 const WALLET_NAME = "PubkeySollet";
@@ -72,7 +72,9 @@ export async function handleSignMessage(message: Uint8Array): Promise<{ signatur
 }
 
 export async function handleSignTransaction<T extends Transaction | VersionedTransaction>(transaction: T): Promise<T> {
-  console.log("transaction\n" + dumpTransaction(transaction));
+  const parsedTransaction = parseTransaction(transaction);
+
+  console.log("transaction\n" + stringifyParsedTransaction(parsedTransaction));
 
   window.alert([
     "signTransaction requested!",
@@ -85,7 +87,9 @@ export async function handleSignTransaction<T extends Transaction | VersionedTra
 }
 
 export async function handleSignAllTransactions<T extends Transaction | VersionedTransaction>(transactions: T[]): Promise<T[]> {
-  transactions.forEach((t, i) => console.log(`transactions[${i}]\n` + dumpTransaction(t, i)));
+  const parsedTransactions = transactions.map(parseTransaction);
+  
+  parsedTransactions.forEach((t, i) => console.log(`transactions[${i}]\n` + stringifyParsedTransaction(t, i)));
 
   const numTransactions = transactions.length;
   window.alert([
@@ -103,7 +107,9 @@ export async function handleSignAndSendTransaction<T extends Transaction | Versi
   transaction: T,
   options?: SendOptions
 ): Promise<{ signature: TransactionSignature }> {
-  console.log("transaction\n" + dumpTransaction(transaction));
+  const parsedTransaction = parseTransaction(transaction);
+
+  console.log("transaction\n" + stringifyParsedTransaction(parsedTransaction));
 
   window.alert([
     "signTransactionAndSendTransaction requested!",

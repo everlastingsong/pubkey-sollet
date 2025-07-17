@@ -1,12 +1,26 @@
 import { Transaction, VersionedTransaction } from "@solana/web3.js";
 
-const IX_DATA_CHUNK_SIZE = 32
+const IX_DATA_CHUNK_SIZE = 16;
 
-export function dumpTransaction(transaction: Transaction | VersionedTransaction, index: number|null = null): string {
+export type ParsedTransaction = {
+  version: "legacy" | "V0";
+  serialized: number[];
+  instructions: {
+    programId: string;
+    keys: {
+      isSigner: boolean;
+      isWritable: boolean;
+      pubkey: string;
+    }[];
+    data: number[];
+  }[];
+};
+
+export function parseTransaction(transaction: Transaction | VersionedTransaction): ParsedTransaction {
   if (isVersionedTransaction(transaction)) {
-    return dumpVersionedTransaction(transaction, index);
+    return parseVersionedTransaction(transaction);
   } else {
-    return dumpLegacyTransaction(transaction, index);
+    return parseLegacyTransaction(transaction);
   }
 }
 
@@ -24,47 +38,30 @@ function isVersionedTransaction(transaction: Transaction | VersionedTransaction)
   return "version" in transaction;
 };
 
-function dumpLegacyTransaction(transaction: Transaction, index: number|null = null): string {
-  let lines: string[] = [];
+function parseLegacyTransaction(transaction: Transaction): ParsedTransaction {
+  const version = "legacy";
+  const serialized = Array.from(transaction.serialize({ requireAllSignatures: false, verifySignatures: false }));
+  const instructions = transaction.instructions.map((ix) => ({
+    programId: ix.programId.toBase58(),
+    data: Array.from(ix.data),
+    keys: ix.keys.map((key) => ({
+      isSigner: key.isSigner,
+      isWritable: key.isWritable,
+      pubkey: key.pubkey.toBase58(),
+    })),
+  }));
 
-  lines.push(`version: not versioned (legacy)`);
-
-  transaction.instructions.forEach((ix, i) => {
-    const prefix = index === null ? "" : `${index}.`;
-    lines.push(`${prefix}${i}: ${ix.programId.toBase58()}`);
-
-    lines.push(`  data`);
-    for (let d=0; d<ix.data.length; d+=IX_DATA_CHUNK_SIZE) {
-      const hex = convertToHex(new Uint8Array(ix.data).slice(d, d+IX_DATA_CHUNK_SIZE));
-      lines.push(`    ${hex}`);
-    }
-
-    lines.push(`  keys`);
-    ix.keys.forEach((key, k) => {
-      const signer = key.isSigner ? "s" : "-";
-      const writable = key.isWritable ? "w" : "-";
-      const rws = `r${writable}${signer}`;
-      lines.push(`    ${k.toString().padStart(2, "0")}: ${rws} ${key.pubkey.toBase58()}`);
-    });
-
-    lines.push("");
-  });
-
-  const serializedBase64 = convertToBase64(new Uint8Array(transaction.serialize({ requireAllSignatures: false, verifySignatures: false })));
-  lines.push(`serialized: ${serializedBase64}`);
-  lines.push("");
-
-  return lines.join("\n");
+  return {
+    version,
+    serialized,
+    instructions,
+  };
 }
 
-function dumpVersionedTransaction(transaction: VersionedTransaction, index: number|null = null): string {
+function parseVersionedTransaction(transaction: VersionedTransaction): ParsedTransaction {
   const message = transaction.message;
   const isSigner = message.isAccountSigner.bind(message);
   const isWritable = message.isAccountWritable.bind(message);
-
-  let lines: string[] = [];
-
-  lines.push(`version: ${transaction.version}`);
 
   // if ALTs are used, we cannot know the loaded pubkeys without fetching them.
   // we would like to avoid fetching them, so we just ALT <ALT ADDRESS>[<INDEX>] notation.
@@ -78,36 +75,55 @@ function dumpVersionedTransaction(transaction: VersionedTransaction, index: numb
   });
   const keys = [...staticKeys, ...writableKeys, ...readonlyKeys];
 
-  transaction.message.compiledInstructions.forEach((ix, i) => {
+  const version = "V0";
+  const serialized = Array.from(transaction.serialize());
+  const instructions = transaction.message.compiledInstructions.map((ix) => ({
+    programId: keys[ix.programIdIndex],
+    data: Array.from(ix.data),
+    keys: ix.accountKeyIndexes.map((keyIndex) => ({
+      isSigner: isSigner(keyIndex),
+      isWritable: isWritable(keyIndex),
+      pubkey: keys[keyIndex],
+    })),
+  }));
+
+  return {
+    version,
+    serialized,
+    instructions,
+  };
+}
+
+export function stringifyParsedTransaction(transaction: ParsedTransaction, index: number|null = null): string {
+  let lines: string[] = [];
+
+  lines.push(`version: ${transaction.version}`);
+  lines.push(`size: ${transaction.serialized.length}`);
+
+  transaction.instructions.forEach((ix, i) => {
     const prefix = index === null ? "" : `${index}.`;
-    lines.push(`${prefix}${i}: ${keys[ix.programIdIndex]}`);
+    lines.push(`ix[${prefix}${i}]: ${ix.programId}`);
 
     lines.push(`  data`);
     for (let d=0; d<ix.data.length; d+=IX_DATA_CHUNK_SIZE) {
-      const hex = convertToHex(ix.data.slice(d, d+IX_DATA_CHUNK_SIZE));
+      const hex = convertToHex(new Uint8Array(ix.data.slice(d, d+IX_DATA_CHUNK_SIZE)));
       lines.push(`    ${hex}`);
     }
 
     lines.push(`  keys`);
-    ix.accountKeyIndexes.forEach((keyIndex, k) => {
-      const signer = isSigner(keyIndex) ? "s" : "-";
-      const writable = isWritable(keyIndex) ? "w" : "-";
+    ix.keys.forEach((key, k) => {
+      const signer = key.isSigner ? "s" : "-";
+      const writable = key.isWritable ? "w" : "-";
       const rws = `r${writable}${signer}`;
-      lines.push(`    ${k.toString().padStart(2, "0")}: ${rws} ${keys[keyIndex]}`);
+      lines.push(`    ${k.toString().padStart(2, "0")}: ${rws} ${key.pubkey}`);
     });
 
     lines.push("");
   });
 
-  const serializedBase64 = convertToBase64(transaction.serialize());
+  const serializedBase64 = convertToBase64(new Uint8Array(transaction.serialized));
   lines.push(`serialized: ${serializedBase64}`);
   lines.push("");
-
-  window.dispatchEvent(new CustomEvent("callMyFunction", {
-    detail: {
-      serializedBase64,
-    },
-  }));
 
   return lines.join("\n");
 }
