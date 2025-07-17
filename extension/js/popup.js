@@ -1,4 +1,4 @@
-function save() {
+function saveConfig() {
   const nicknames = document.getElementsByName("nickname");
   const pubkeys = document.getElementsByName("pubkey");
   const config = { frequentlyUsedPubkeys: [] };
@@ -19,7 +19,7 @@ function save() {
   });
 }
 
-function restore() {
+function restoreConfig() {
   chrome.storage.local.get("config", function({config}) {
     const frequentlyUsedPubkeys = config.frequentlyUsedPubkeys || [];
 
@@ -34,6 +34,14 @@ function restore() {
       nicknames[i].value = nickname;
       pubkeys[i].value = pubkey;
     }
+  });
+}
+
+function restoreLastTransactions() {
+  chrome.storage.local.get("lastTransactions", function({lastTransactions}) {
+    const lastTransactionsFrame = document.getElementById('last-transactions-frame');
+    const innerHTML = `<pre>${JSON.stringify(lastTransactions, null, 2)}</pre>`;
+    lastTransactionsFrame.innerHTML = innerHTML;
   });
 }
 
@@ -62,7 +70,7 @@ function buildPopup() {
 
   selectTab('config');
 
-  document.getElementById('save').addEventListener('click', save);
+  document.getElementById('save').addEventListener('click', saveConfig);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -71,5 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   buildPopup();
-  restore();  
+
+  restoreConfig();
+  restoreLastTransactions();
 });

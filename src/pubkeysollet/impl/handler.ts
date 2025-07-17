@@ -1,7 +1,8 @@
 import { PublicKey, Transaction, VersionedTransaction, TransactionSignature, SendOptions } from "@solana/web3.js";
 import { type SolanaSignInInput, type SolanaSignInOutput } from '@solana/wallet-standard-features';
-import { parseTransaction, stringifyParsedTransaction } from "./txutil";
+import { parseTransaction, stringifyParsedTransaction } from "./tx-util";
 import { PubkeySolletSanitizedConfig } from "./wallet-impl";
+import { updateLastTransactions } from "./popup-util";
 
 const WALLET_NAME = "PubkeySollet";
 
@@ -75,6 +76,7 @@ export async function handleSignTransaction<T extends Transaction | VersionedTra
   const parsedTransaction = parseTransaction(transaction);
 
   console.log("transaction\n" + stringifyParsedTransaction(parsedTransaction));
+  updateLastTransactions([parsedTransaction]);
 
   window.alert([
     "signTransaction requested!",
@@ -90,6 +92,7 @@ export async function handleSignAllTransactions<T extends Transaction | Versione
   const parsedTransactions = transactions.map(parseTransaction);
   
   parsedTransactions.forEach((t, i) => console.log(`transactions[${i}]\n` + stringifyParsedTransaction(t, i)));
+  updateLastTransactions(parsedTransactions);
 
   const numTransactions = transactions.length;
   window.alert([
@@ -110,6 +113,7 @@ export async function handleSignAndSendTransaction<T extends Transaction | Versi
   const parsedTransaction = parseTransaction(transaction);
 
   console.log("transaction\n" + stringifyParsedTransaction(parsedTransaction));
+  updateLastTransactions([parsedTransaction]);
 
   window.alert([
     "signTransactionAndSendTransaction requested!",

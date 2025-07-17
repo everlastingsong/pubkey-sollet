@@ -11,7 +11,7 @@ chrome.storage.local.get("config", ({config}) => {
   container.removeChild(scriptTag);
 });
 
-window.addEventListener("callMyFunction", (event) => {
-  const detail = event.detail;
-  console.info("callMyFunction event received", detail);
+window.addEventListener("updateLastTransactions", (event) => {
+  const lastTransactions = JSON.parse(event.detail);
+  chrome.storage.local.set({ lastTransactions }, function () {});
 });
