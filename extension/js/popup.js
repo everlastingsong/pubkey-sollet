@@ -38,10 +38,20 @@ function restoreConfig() {
 }
 
 function restoreLastTransactions() {
-  chrome.storage.local.get("lastTransactions", function({lastTransactions}) {
+  chrome.storage.local.get("lastTransactions", function({lastTransactions: {timestamp, site, transactions}}) {
     const lastTransactionsFrame = document.getElementById('last-transactions-frame');
 
-    lastTransactions.forEach((tx) => {
+    const siteDiv = document.createElement('div');
+    lastTransactionsFrame.appendChild(siteDiv);
+    siteDiv.innerText = `Site: ${site}`;
+
+    const timestampDiv = document.createElement('div');
+    lastTransactionsFrame.appendChild(timestampDiv);
+    timestampDiv.innerText = `Requested: ${new Date(timestamp).toLocaleString()}`;
+
+    lastTransactionsFrame.appendChild(document.createElement('br'));
+
+    transactions.forEach((tx) => {
       const transactionDiv = document.createElement('div');
 
       const versionDiv = document.createElement('div');
@@ -75,7 +85,7 @@ function restoreLastTransactions() {
       lastTransactionsFrame.appendChild(transactionDiv);
     });
 
-    if (lastTransactions.length > 0) {
+    if (transactions.length > 0) {
       selectTab('tx');
     }
   });

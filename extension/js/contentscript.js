@@ -12,6 +12,8 @@ chrome.storage.local.get("config", ({config}) => {
 });
 
 window.addEventListener("updateLastTransactions", (event) => {
-  const lastTransactions = JSON.parse(event.detail);
-  chrome.storage.local.set({ lastTransactions }, function () {});
+  const transactions = JSON.parse(event.detail);
+  const timestamp = Date.now();
+  const site = window.location.host;
+  chrome.storage.local.set({ lastTransactions: { timestamp, site, transactions } }, function () {});
 });
